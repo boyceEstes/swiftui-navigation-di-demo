@@ -59,7 +59,7 @@ class NavigationFlow: StackNavigationFlow {
 }
 
 
-class FishingNavigationFlow: ObservableObject {
+class FishingNavigationFlow: StackNavigationFlow {
     
     // MARK: Properties
     @Published var path = [StackIdentifier]()
@@ -70,30 +70,6 @@ class FishingNavigationFlow: ObservableObject {
         case fishDetail(String)
         case backpackItemDetail(String)
     }
-    
-    
-    func push(view: StackIdentifier) {
-        
-        switch view {
-            
-        case .fishDetail(let fish):
-            path.append(.fishDetail(fish))
-            
-        case .backpackItemDetail(let item):
-            path.append(.backpackItemDetail(item))
-        }
-    }
-    
-    
-    func goToFishDetail(fish: String) {
-        push(view: .fishDetail(fish))
-    }
-    
-    
-    func goToBackpackItemDetail(item: String) {
-        push(view: .backpackItemDetail(item))
-    }
-    
 }
 
 

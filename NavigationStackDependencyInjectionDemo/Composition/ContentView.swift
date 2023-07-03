@@ -162,13 +162,14 @@ struct ContentView: View {
     
     // MARK: - FishingNavigationFlow
     private func goToFishDetail(fish: String) {
-        fishingNavigationFlow.push(view: .fishDetail(fish))
+        fishingNavigationFlow.push(.fishDetail(fish))
     }
     
     
     private func goToBackpackItemDetail(item: String) {
-        fishingNavigationFlow.push(view: .backpackItemDetail(item))
+        fishingNavigationFlow.push(.backpackItemDetail(item))
     }
+    
     
     func fishingView(backpackRepository: BackpackRepository) -> some View {
         
