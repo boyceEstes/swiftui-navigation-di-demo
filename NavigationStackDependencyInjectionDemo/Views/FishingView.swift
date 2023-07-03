@@ -23,10 +23,19 @@ struct FishingView: View {
         VStack {
             Text("You watch your bobber float in the water and enjoy the warm sun on your skin")
             
-            Button("Nap") {
-                goToNap()
+            HStack {
+                Button("Nap") {
+                    goToNap()
+                }
+                .buttonStyle(BigDealButtonStyle(backgroundColor: .pink))
+                
+                Button("Yank'a'Fish") {
+                    catches.append(potentialCatches.randomElement()!)
+                }
+                .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
             }
-            .buttonStyle(BigDealButtonStyle(backgroundColor: .pink))
+
+            
             
             List {
                 Section {
