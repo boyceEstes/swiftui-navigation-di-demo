@@ -27,6 +27,16 @@ extension StackNavigationFlow {
 }
 
 
+
+protocol SheetyNavigationFlow: ObservableObject {
+    
+    associatedtype Identifier: Identifiable
+    
+    var displayedSheet: Identifier? { get set }
+}
+
+
+
 class NavigationFlow: StackNavigationFlow {
     
     // MARK: Properties
@@ -56,6 +66,10 @@ class NavigationFlow: StackNavigationFlow {
             }
         }
     }
+    
+    
+    // MARK: Sheety Display
+    @Published var displayedSheet: SheetyIdentifier?
 }
 
 
