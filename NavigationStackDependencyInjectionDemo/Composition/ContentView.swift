@@ -15,6 +15,64 @@ import SwiftUI
  * Create a new NavigationFlow for each stack hierarchy that is needed
  */
 
+
+class BridgeViewModel {
+    
+    func displayFish(caughtFish: [String]) {
+        print("All the fish caught on the bridge! \(caughtFish)")
+    }
+}
+
+
+class BridgeUIComposer {
+    
+    static func makeBridgeView(goToFishing: @escaping (@escaping HomeNavigationFlow.FinishFishing) -> Void) -> BridgeView {
+        
+        let bridgeViewModel = BridgeViewModel()
+        
+        return BridgeView {
+            goToFishing(bridgeViewModel.displayFish)
+        }
+    }
+}
+
+
+class RiverUIComposer {
+    
+    static func makeRiverView(
+        backpackRepository: BackpackRepository,
+        goToBridge: @escaping () -> Void,
+        goToFishing: @escaping (@escaping HomeNavigationFlow.FinishFishing) -> Void
+    ) -> RiverView {
+        
+        RiverView(
+            backpackRepository: backpackRepository,
+            goToBridge: goToBridge,
+            goToFishing: {
+                goToFishing { caughtFish in
+                    print("Finished fishing at the river, caught \(caughtFish)")
+                }
+            }
+        )
+    }
+}
+
+
+//class FishingUIComposer {
+//
+//    static func makeFishingView(finishFishing: ([String]) -> Void) -> FishingView {
+//
+//        FishingView(
+//            backpackRepository: backpackRepository,
+//            goToBackpackItemDetail: goToBackPackItemDetail,
+//            goToFishDetail: goToFishDetail,
+//            goToNap: goToNap,
+//            finishFishing: finishFishing
+//        )
+//    }
+//}
+
+
 struct ContentView: View {
     
     @StateObject var backpackRepository = BackpackRepository()
@@ -27,20 +85,20 @@ struct ContentView: View {
             .flowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
                 switch identifier {
                 case let .river(backpackRepository):
-                    RiverView(
+                    RiverUIComposer.makeRiverView(
                         backpackRepository: backpackRepository,
                         goToBridge: goToBridge,
                         goToFishing: goToFishing
                     )
                 case .bridge:
-                    BridgeView(goToFishing: goToFishing)
+                    BridgeUIComposer.makeBridgeView(goToFishing: goToFishing)
                 }
             }
             .sheet(item: $navigationFlow.displayedSheet) { sheetyDestination in
                 switch sheetyDestination {
                     
-                case .fishing(let backpackRepository):
-                    fishingView2(backpackRepository: backpackRepository)
+                case let .fishing(backpackRepository, finishFishing):
+                    fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
                 }
             }
     }
@@ -56,19 +114,20 @@ struct ContentView: View {
     }
     
 
-    private func goToFishing() {
-        navigationFlow.displayedSheet = .fishing(backpackRepository)
+    private func goToFishing(finishFishing: @escaping HomeNavigationFlow.FinishFishing) {
+        navigationFlow.displayedSheet = .fishing(backpackRepository, finishFishing)
     }
     
     
     // MARK: - FishingNavigationFlow
-    func fishingView2(backpackRepository: BackpackRepository) -> some View {
+    func fishingView2(backpackRepository: BackpackRepository, finishFishing: @escaping ([String]) -> Void) -> some View {
 
         FishingView(
             backpackRepository: backpackRepository,
             goToBackpackItemDetail: goToBackpackItemDetail,
             goToFishDetail: goToFishDetail,
-            goToNap: goToNap
+            goToNap: goToNap,
+            finishFishing: finishFishing
         )
         .flowNavigationDestination(
             flowPath: $fishingNavigationFlow.path,

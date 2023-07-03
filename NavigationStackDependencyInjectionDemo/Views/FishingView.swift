@@ -12,10 +12,13 @@ struct FishingView: View {
     
     let potentialCatches = ["Snapper", "Carp", "Bass", "Trout", "Mudfish", "Jellyfish", "Halibut", "Goldfish"]
     
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var backpackRepository: BackpackRepository
     let goToBackpackItemDetail: (String) -> Void
     let goToFishDetail: (String) -> Void
     let goToNap: () -> Void
+    
+    let finishFishing: ([String]) -> Void
     
     @State private var catches = [String]()
     
@@ -34,7 +37,6 @@ struct FishingView: View {
                 }
                 .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
             }
-
             
             
             List {
@@ -88,17 +90,29 @@ struct FishingView: View {
             Spacer()
         }
         .basicNavigationBar(title: "Fishing", navigationBarColor: .orange)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Finish up") {
+                    print("Tapped finsh button")
+                    finishFishing(catches)
+                    dismiss()
+                }
+            }
+        }
     }
 }
 
 
 struct FishingView_Previews: PreviewProvider {
     static var previews: some View {
-        FishingView(
-            backpackRepository: BackpackRepository.preview,
-            goToBackpackItemDetail: { _ in },
-            goToFishDetail: { _ in },
-            goToNap: { }
-        )
+        NavigationStack {
+            FishingView(
+                backpackRepository: BackpackRepository.preview,
+                goToBackpackItemDetail: { _ in },
+                goToFishDetail: { _ in },
+                goToNap: { },
+                finishFishing: { _ in }
+            )
+        }
     }
 }

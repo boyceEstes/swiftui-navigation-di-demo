@@ -43,12 +43,15 @@ class HomeNavigationFlow: StackNavigationFlow {
     
     
     // MARK: Sheety Display
+    
+    typealias FinishFishing = ([String]) -> Void
+    
     enum SheetyIdentifier: Identifiable {
-        case fishing(BackpackRepository)
+        case fishing(BackpackRepository, FinishFishing)
         
         var id: String {
             switch self {
-            case .fishing(let backpackRepository):
+            case let .fishing(backpackRepository, _):
                 return "fishing-\(backpackRepository.id)"
             }
         }
