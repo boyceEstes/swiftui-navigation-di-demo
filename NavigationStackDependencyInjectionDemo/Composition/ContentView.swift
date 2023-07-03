@@ -87,6 +87,7 @@ struct ContentView: View {
             switch identifier {
             case .nap:
                 NapView()
+                    .presentationDetents([.medium, .large])
             }
         }
     }
