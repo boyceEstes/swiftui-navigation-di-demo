@@ -37,6 +37,8 @@ protocol SheetyNavigationFlow: ObservableObject {
 
 
 
+// APP-SPECIFIC
+
 class NavigationFlow: StackNavigationFlow {
     
     // MARK: Properties

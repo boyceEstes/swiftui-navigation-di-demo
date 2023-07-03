@@ -18,98 +18,33 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject var backpackRepository = BackpackRepository()
-//    @State private var levelOneDisplayedSheet: SheetyIdentifier?
     
     @StateObject var navigationFlow = NavigationFlow()
     @StateObject var fishingNavigationFlow = FishingNavigationFlow()
     
-//    @StateObject var riverUIComposer = RiverUIComposer()
-    
     var body: some View {
-//        NavigationStack(path: $navigationFlow.path) {
-            HomeView(goToRiver: goToRiver)
-                .modifier(
-                    FlowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
-                        switch identifier {
-                        case let .river(backpackRepository):
-                            RiverView(
-                                backpackRepository: backpackRepository,
-                                goToBridge: goToBridge,
-                                goToFishing: goToFishingFromRiver
-                            )
-                        case .bridge:
-                            
-                            BridgeView(goToFishing: goToFishingFromRiver)
-//                                .sheet(item: $BridgeUIComposer, content: <#T##(Identifiable) -> View#>)
-                        }
-                    }
-                )
-                .sheet(item: $navigationFlow.displayedSheet) { sheetyDestination in
-                    switch sheetyDestination {
-                        
-                    case .fishing(let backpackRepository):
-                        fishingView2(backpackRepository: backpackRepository)
-                    }
+        HomeView(goToRiver: goToRiver)
+
+            .flowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
+                switch identifier {
+                case let .river(backpackRepository):
+                    RiverView(
+                        backpackRepository: backpackRepository,
+                        goToBridge: goToBridge,
+                        goToFishing: goToFishingFromRiver
+                    )
+                case .bridge:
+
+                    BridgeView(goToFishing: goToFishingFromRiver)
                 }
-//            .modifier(FlowNavigationDestination(flowPath: $navigationFlow.path) )
-//        }
-            /*
-            HomeView(goToRiver: goToRiver)
-                .navigationDestination(for: NavigationFlow.StackIdentifier.self) { identifier in
+            }
+            .sheet(item: $navigationFlow.displayedSheet) { sheetyDestination in
+                switch sheetyDestination {
                     
-                    switch identifier {
-                    case .river(let backpackRepository):
-                        
-                        RiverView(
-                            backpackRepository: backpackRepository,
-                            goToBridge: goToBridge,
-                            goToFishing: sheetyGoToFishing
-                        )
-                        .modifier(
-                            LevelOneSheet(
-                                displayedSheet: $levelOneDisplayedSheet,
-                                navigationFlowPath: $fishingNavigationFlow.path
-                            )
-                        )
-                    case .bridge:
-                        BridgeView(
-                            goToFishing: sheetyGoToFishing
-                        )
-                        .modifier(
-                            LevelOneSheet(
-                                displayedSheet: $levelOneDisplayedSheet,
-                                navigationFlowPath: $fishingNavigationFlow.path
-                            )
-                        )
-//                            .sheet(item: $levelOneDisplayedSheet) { identifier in
-//
-//                                switch identifier {
-//                                case .fishing(let backpackRepository):
-//
-//                                    NavigationStack(path: $fishingNavigationFlow.path) {
-//                                        FishingView(
-//                                            backpackRepository: backpackRepository,
-//                                            goToBackpackItemDetail: goToBackpackItemDetail,
-//                                            goToFishDetail: goToFishDetail
-//                                        )
-//                                            .navigationDestination(for: FishingNavigationFlow.StackIdentifier.self) { identifier in
-//
-//                                                switch identifier {
-//                                                case .fishDetail(let fish):
-//                                                    FishDetailView(fish: fish)
-//
-//                                                case .backpackItemDetail(let item):
-//                                                    BackpackItemDetailView(item: item)
-//                                                }
-//                                            }
-//                                    }
-//                                }
-//                            }
-                    }
+                case .fishing(let backpackRepository):
+                    fishingView2(backpackRepository: backpackRepository)
                 }
-        }
-//        HomeViewWithNavigation(goToRiver: goToRiver, navigationFlow: navigationFlow)
-        */
+            }
     }
     
 
@@ -121,7 +56,6 @@ struct ContentView: View {
     private func goToBridge() {
         navigationFlow.push(.bridge)
     }
-    
     
 
     private func goToFishingFromRiver() {
@@ -140,27 +74,6 @@ struct ContentView: View {
     }
     
     
-//    func fishingView(backpackRepository: BackpackRepository) -> some View {
-//
-//        NavigationStack(path: $fishingNavigationFlow.path) {
-//            FishingView(
-//                backpackRepository: backpackRepository,
-//                goToBackpackItemDetail: goToBackpackItemDetail,
-//                goToFishDetail: goToFishDetail
-//            )
-//            .navigationDestination(for: FishingNavigationFlow.StackIdentifier.self) { identifier in
-//                switch identifier {
-//                case .fishDetail(let fish):
-//                    FishDetailView(fish: fish)
-//
-//                case .backpackItemDetail(let item):
-//                    BackpackItemDetailView(item: item)
-//                }
-//            }
-//        }
-//    }
-//
-    
     func fishingView2(backpackRepository: BackpackRepository) -> some View {
 
         FishingView(
@@ -168,28 +81,34 @@ struct ContentView: View {
             goToBackpackItemDetail: goToBackpackItemDetail,
             goToFishDetail: goToFishDetail
         )
-        .modifier(
-            FlowNavigationDestination(
-                flowPath: $fishingNavigationFlow.path) { identifier in
-                    switch identifier {
-                    case .fishDetail(let fish):
-                        FishDetailView(fish: fish)
+        .flowNavigationDestination(
+            flowPath: $fishingNavigationFlow.path,
+            flowDestination: { identifier in
+                switch identifier {
+                case .fishDetail(let fish):
+                    FishDetailView(fish: fish)
 
-                    case .backpackItemDetail(let item):
-                        BackpackItemDetailView(item: item)
-                    }
+                case .backpackItemDetail(let item):
+                    BackpackItemDetailView(item: item)
                 }
+            }
         )
     }
 }
-
-//typealias StackIdentifier
 
 
 struct FlowNavigationDestination<DestinationContent: View, StackIdentifier: Hashable>: ViewModifier {
     
     @Binding var flowPath: [StackIdentifier]
     @ViewBuilder let flowDestination: (StackIdentifier) -> DestinationContent
+    
+    init(
+        flowPath: Binding<[StackIdentifier]>,
+        @ViewBuilder flowDestination: @escaping (StackIdentifier) -> DestinationContent
+    ) {
+        self._flowPath = flowPath
+        self.flowDestination = flowDestination
+    }
     
     func body(content: Content) -> some View {
         
@@ -201,15 +120,19 @@ struct FlowNavigationDestination<DestinationContent: View, StackIdentifier: Hash
 }
 
 
-//extension View {
-//
-//    func flowNavigationDestination(flowPath: Binding<[NavigationFlow.StackIdentifier]>) -> some View {
-//
-//        modifier(
-//            FlowNavigationDestination(flowPath: flowPath)
-//        )
-//    }
-//}
+extension View {
+    
+    func flowNavigationDestination<DestinationContent: View, StackIdentifier: Hashable> (
+        flowPath: Binding<[StackIdentifier]>,
+        @ViewBuilder flowDestination: @escaping (StackIdentifier) -> DestinationContent
+    ) -> some View {
+        
+        modifier(
+            FlowNavigationDestination(flowPath: flowPath, flowDestination: flowDestination)
+        )
+    }
+}
+
 
 struct FlowSheet<SheetContent: View>: ViewModifier {
     
@@ -220,49 +143,6 @@ struct FlowSheet<SheetContent: View>: ViewModifier {
         
         content
             .sheet(item: $displayFlowSheet, content: displayFlowSheetContent)
-    }
-}
-
-
-struct LevelOneSheet: ViewModifier {
-    
-    @Binding var displayedSheet: SheetyIdentifier?
-    @Binding var navigationFlowPath: [FishingNavigationFlow.StackIdentifier] // TODO: Make protocol some NavigationPathObject
-    
-    // MARK: - FishingNavigationFlow
-    private func goToFishDetail(fish: String) {
-        navigationFlowPath.append(.fishDetail(fish))
-    }
-    
-    
-    private func goToBackpackItemDetail(item: String) {
-        navigationFlowPath.append(.backpackItemDetail(item))
-    }
-    
-    
-    func body(content: Content) -> some View {
-        content.sheet(item: $displayedSheet) { identifier in
-
-            switch identifier {
-            case .fishing(let backpackRepository):
-                NavigationStack(path: $navigationFlowPath) {
-                    FishingView(
-                        backpackRepository: backpackRepository,
-                        goToBackpackItemDetail: goToBackpackItemDetail,
-                        goToFishDetail: goToFishDetail
-                    )
-                    .navigationDestination(for: FishingNavigationFlow.StackIdentifier.self) { identifier in
-                        switch identifier {
-                        case .fishDetail(let fish):
-                            FishDetailView(fish: fish)
-                            
-                        case .backpackItemDetail(let item):
-                            BackpackItemDetailView(item: item)
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
