@@ -10,6 +10,7 @@
 		B35970F02A533A8300C4D3A5 /* NapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35970EF2A533A8300C4D3A5 /* NapView.swift */; };
 		B35970F22A533E2700C4D3A5 /* NavigationFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35970F12A533E2700C4D3A5 /* NavigationFlow.swift */; };
 		B35970F42A533E6A00C4D3A5 /* View+FlowNavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35970F32A533E6A00C4D3A5 /* View+FlowNavigationDestination.swift */; };
+		B35970FC2A5360E700C4D3A5 /* BackpackListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35970FB2A5360E700C4D3A5 /* BackpackListView.swift */; };
 		B3CB9E8E2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CB9E8D2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift */; };
 		B3CB9E902A4E303000DB0B41 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CB9E8F2A4E303000DB0B41 /* ContentView.swift */; };
 		B3CB9E922A4E303100DB0B41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3CB9E912A4E303100DB0B41 /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		B35970EF2A533A8300C4D3A5 /* NapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NapView.swift; sourceTree = "<group>"; };
 		B35970F12A533E2700C4D3A5 /* NavigationFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationFlow.swift; sourceTree = "<group>"; };
 		B35970F32A533E6A00C4D3A5 /* View+FlowNavigationDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FlowNavigationDestination.swift"; sourceTree = "<group>"; };
+		B35970FB2A5360E700C4D3A5 /* BackpackListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackpackListView.swift; sourceTree = "<group>"; };
 		B3CB9E8A2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationStackDependencyInjectionDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3CB9E8D2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStackDependencyInjectionDemoApp.swift; sourceTree = "<group>"; };
 		B3CB9E8F2A4E303000DB0B41 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				B3CB9EB82A4F37AF00DB0B41 /* FishDetailView.swift */,
 				B3CB9EBB2A4F383D00DB0B41 /* BackpackItemDetailView.swift */,
 				B35970EF2A533A8300C4D3A5 /* NapView.swift */,
+				B35970FB2A5360E700C4D3A5 /* BackpackListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 				B35970F42A533E6A00C4D3A5 /* View+FlowNavigationDestination.swift in Sources */,
 				B3CB9EA82A4E315300DB0B41 /* BackpackRepository.swift in Sources */,
 				B3CB9EA52A4E30CB00DB0B41 /* FishingView.swift in Sources */,
+				B35970FC2A5360E700C4D3A5 /* BackpackListView.swift in Sources */,
 				B35970F22A533E2700C4D3A5 /* NavigationFlow.swift in Sources */,
 				B3CB9EB92A4F37AF00DB0B41 /* FishDetailView.swift in Sources */,
 				B3CB9E8E2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift in Sources */,
