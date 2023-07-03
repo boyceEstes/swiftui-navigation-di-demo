@@ -15,12 +15,18 @@ struct FishingView: View {
     @ObservedObject var backpackRepository: BackpackRepository
     let goToBackpackItemDetail: (String) -> Void
     let goToFishDetail: (String) -> Void
+    let goToNap: () -> Void
     
     @State private var catches = [String]()
     
     var body: some View {
         VStack {
             Text("You watch your bobber float in the water and enjoy the warm sun on your skin")
+            
+            Button("Nap") {
+                goToNap()
+            }
+            .buttonStyle(BigDealButtonStyle(backgroundColor: .pink))
             
             List {
                 Section {
@@ -82,7 +88,8 @@ struct FishingView_Previews: PreviewProvider {
         FishingView(
             backpackRepository: BackpackRepository.preview,
             goToBackpackItemDetail: { _ in },
-            goToFishDetail: { _ in}
+            goToFishDetail: { _ in },
+            goToNap: { }
         )
     }
 }

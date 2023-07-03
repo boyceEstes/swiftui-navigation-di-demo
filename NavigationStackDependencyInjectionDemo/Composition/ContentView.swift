@@ -23,8 +23,7 @@ struct ContentView: View {
     @StateObject var fishingNavigationFlow = FishingNavigationFlow()
     
     var body: some View {
-        HomeView(goToRiver: goToRiver)
-
+        HomeUIComposer.makeHomeView(goToRiver: goToRiver)
             .flowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
                 switch identifier {
                 case let .river(backpackRepository):
@@ -64,22 +63,13 @@ struct ContentView: View {
     
     
     // MARK: - FishingNavigationFlow
-    private func goToFishDetail(fish: String) {
-        fishingNavigationFlow.push(.fishDetail(fish))
-    }
-    
-    
-    private func goToBackpackItemDetail(item: String) {
-        fishingNavigationFlow.push(.backpackItemDetail(item))
-    }
-    
-    
     func fishingView2(backpackRepository: BackpackRepository) -> some View {
 
         FishingView(
             backpackRepository: backpackRepository,
             goToBackpackItemDetail: goToBackpackItemDetail,
-            goToFishDetail: goToFishDetail
+            goToFishDetail: goToFishDetail,
+            goToNap: goToNap
         )
         .flowNavigationDestination(
             flowPath: $fishingNavigationFlow.path,
@@ -93,7 +83,30 @@ struct ContentView: View {
                 }
             }
         )
+        .sheet(item: $fishingNavigationFlow.displayedSheet) { identifier in
+            switch identifier {
+            case .nap:
+                NapView()
+            }
+        }
     }
+    
+    
+    private func goToFishDetail(fish: String) {
+        fishingNavigationFlow.push(.fishDetail(fish))
+    }
+    
+    
+    private func goToBackpackItemDetail(item: String) {
+        fishingNavigationFlow.push(.backpackItemDetail(item))
+    }
+    
+    
+    private func goToNap() {
+        fishingNavigationFlow.displayedSheet = .nap
+    }
+    
+    
 }
 
 
@@ -133,18 +146,18 @@ extension View {
     }
 }
 
-
-struct FlowSheet<SheetContent: View>: ViewModifier {
-    
-    @Binding var displayFlowSheet: SheetyIdentifier?
-    @ViewBuilder let displayFlowSheetContent: (SheetyIdentifier) -> SheetContent
-    
-    func body(content: Content) -> some View {
-        
-        content
-            .sheet(item: $displayFlowSheet, content: displayFlowSheetContent)
-    }
-}
+//
+//struct FlowSheet<SheetContent: View>: ViewModifier {
+//
+//    @Binding var displayFlowSheet: SheetyIdentifier?
+//    @ViewBuilder let displayFlowSheetContent: (SheetyIdentifier) -> SheetContent
+//
+//    func body(content: Content) -> some View {
+//
+//        content
+//            .sheet(item: $displayFlowSheet, content: displayFlowSheetContent)
+//    }
+//}
 
 
 struct ContentView_Previews: PreviewProvider {

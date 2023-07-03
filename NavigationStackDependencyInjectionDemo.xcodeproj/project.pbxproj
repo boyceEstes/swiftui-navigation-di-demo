@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B35970F02A533A8300C4D3A5 /* NapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35970EF2A533A8300C4D3A5 /* NapView.swift */; };
 		B3CB9E8E2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CB9E8D2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift */; };
 		B3CB9E902A4E303000DB0B41 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CB9E8F2A4E303000DB0B41 /* ContentView.swift */; };
 		B3CB9E922A4E303100DB0B41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3CB9E912A4E303100DB0B41 /* Assets.xcassets */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B35970EF2A533A8300C4D3A5 /* NapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NapView.swift; sourceTree = "<group>"; };
 		B3CB9E8A2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationStackDependencyInjectionDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3CB9E8D2A4E303000DB0B41 /* NavigationStackDependencyInjectionDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStackDependencyInjectionDemoApp.swift; sourceTree = "<group>"; };
 		B3CB9E8F2A4E303000DB0B41 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				B3CB9EAF2A4E56FE00DB0B41 /* BridgeView.swift */,
 				B3CB9EB82A4F37AF00DB0B41 /* FishDetailView.swift */,
 				B3CB9EBB2A4F383D00DB0B41 /* BackpackItemDetailView.swift */,
+				B35970EF2A533A8300C4D3A5 /* NapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				B3CB9EB52A4F2E0300DB0B41 /* View+basicNavigationBar.swift in Sources */,
 				B3CB9EBC2A4F383D00DB0B41 /* BackpackItemDetailView.swift in Sources */,
 				B3CB9EAB2A4E562100DB0B41 /* HomeUIComposer.swift in Sources */,
+				B35970F02A533A8300C4D3A5 /* NapView.swift in Sources */,
 				B3CB9EAE2A4E564700DB0B41 /* NavigationFlow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

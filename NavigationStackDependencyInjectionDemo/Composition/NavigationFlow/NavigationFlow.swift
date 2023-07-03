@@ -9,18 +9,18 @@ import Foundation
 
 protocol StackNavigationFlow: ObservableObject {
     
-    associatedtype Identifier: Hashable
+    associatedtype StackIdentifier: Hashable
     
-    var path: [Identifier] { get set }
+    var path: [StackIdentifier] { get set }
     
-    func push(_ viewIdentifier: Identifier)
+    func push(_ viewIdentifier: StackIdentifier)
 }
 
 
 extension StackNavigationFlow {
     
     
-    func push(_ viewIdentifier: Identifier) {
+    func push(_ viewIdentifier: StackIdentifier) {
 
         path.append(viewIdentifier)
     }
@@ -30,9 +30,9 @@ extension StackNavigationFlow {
 
 protocol SheetyNavigationFlow: ObservableObject {
     
-    associatedtype Identifier: Identifiable
+    associatedtype SheetyIdentifier: Identifiable
     
-    var displayedSheet: Identifier? { get set }
+    var displayedSheet: SheetyIdentifier? { get set }
 }
 
 
@@ -43,6 +43,7 @@ class NavigationFlow: StackNavigationFlow {
     
     // MARK: Properties
     @Published var path = [StackIdentifier]()
+    @Published var displayedSheet: SheetyIdentifier?
 
     
     // MARK: Stack Destinations
@@ -71,31 +72,42 @@ class NavigationFlow: StackNavigationFlow {
     
     
     // MARK: Sheety Display
-    @Published var displayedSheet: SheetyIdentifier?
-}
-
-
-class FishingNavigationFlow: StackNavigationFlow {
-    
-    // MARK: Properties
-    @Published var path = [StackIdentifier]()
-    
-    
-    enum StackIdentifier: Hashable {
+    enum SheetyIdentifier: Identifiable {
+        case fishing(BackpackRepository)
         
-        case fishDetail(String)
-        case backpackItemDetail(String)
+        var id: String {
+            switch self {
+            case .fishing(let backpackRepository):
+                return "fishing-\(backpackRepository.id)"
+            }
+        }
     }
 }
 
 
-enum SheetyIdentifier: Identifiable {
-    case fishing(BackpackRepository)
+class FishingNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
     
-    var id: String {
-        switch self {
-        case .fishing(let backpackRepository):
-            return "fishing-\(backpackRepository.id)"
+
+    // MARK: Properties
+    @Published var path = [StackFishIdentifier]()
+    @Published var displayedSheet: SheetyFishIdentifier?
+    
+    
+    // MARK: Stack Views
+    enum StackFishIdentifier: Hashable {
+        
+        case fishDetail(String)
+        case backpackItemDetail(String)
+    }
+    
+    // MARK: Sheet Views
+    enum SheetyFishIdentifier: Identifiable {
+        case nap
+        
+        var id: String {
+            switch self {
+            case .nap: return "nap"
+            }
         }
     }
 }
