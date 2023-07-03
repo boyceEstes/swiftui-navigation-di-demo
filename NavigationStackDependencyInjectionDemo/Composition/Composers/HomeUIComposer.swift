@@ -9,6 +9,24 @@ import SwiftUI
 
 
 class HomeUIComposer { }
+
+class RiverUIComposer: ObservableObject {
+    
+    enum SheetyDestination: Identifiable {
+        
+        case fishing(BackpackRepository)
+        
+        var id: String {
+            switch self {
+            case .fishing(let backpackRepository):
+                return "fishing-\(backpackRepository.id)"
+            }
+        }
+    }
+    
+    @Published var displayedSheet: SheetyDestination?
+    
+}
     
     
 //    private init() {}

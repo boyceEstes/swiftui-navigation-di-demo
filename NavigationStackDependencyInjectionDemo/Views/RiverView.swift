@@ -23,6 +23,7 @@ struct RiverView: View {
             .buttonStyle(BigDealButtonStyle(backgroundColor: .red))
             
             Button("Cast a Line") {
+                print("Go to fishing")
                 goToFishing()
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))

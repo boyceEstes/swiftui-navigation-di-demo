@@ -7,7 +7,16 @@
 
 import Foundation
 
-class NavigationFlow: ObservableObject {
+protocol StackNavigationFlow: ObservableObject {
+    
+    associatedtype Identifier: Hashable
+    
+    var path: [Identifier] { get set }
+    
+    func push(_ viewIdentifier: Identifier)
+}
+
+class NavigationFlow: StackNavigationFlow {
     
     // MARK: Properties
     @Published var path = [StackIdentifier]()
@@ -38,16 +47,17 @@ class NavigationFlow: ObservableObject {
     }
     
     
-    func push(view: StackIdentifier) {
-        
-        switch view {
-            
+    func push(_ viewIdentifier: StackIdentifier) {
+
+        switch viewIdentifier {
+
         case .river(let backpackRepository):
             path.append(.river(backpackRepository))
-            
+
         case .bridge:
             path.append(.bridge)
         }
+        
     }
 }
 
@@ -76,6 +86,17 @@ class FishingNavigationFlow: ObservableObject {
             path.append(.backpackItemDetail(item))
         }
     }
+    
+    
+    func goToFishDetail(fish: String) {
+        push(view: .fishDetail(fish))
+    }
+    
+    
+    func goToBackpackItemDetail(item: String) {
+        push(view: .backpackItemDetail(item))
+    }
+    
 }
 
 
