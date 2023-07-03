@@ -39,7 +39,7 @@ protocol SheetyNavigationFlow: ObservableObject {
 
 // APP-SPECIFIC
 
-class NavigationFlow: StackNavigationFlow {
+class HomeNavigationFlow: StackNavigationFlow {
     
     // MARK: Properties
     @Published var path = [StackIdentifier]()
@@ -53,7 +53,7 @@ class NavigationFlow: StackNavigationFlow {
         case river(BackpackRepository)
         case bridge
         
-        static func == (lhs: NavigationFlow.StackIdentifier, rhs: NavigationFlow.StackIdentifier) -> Bool {
+        static func == (lhs: HomeNavigationFlow.StackIdentifier, rhs: HomeNavigationFlow.StackIdentifier) -> Bool {
             return lhs.hashValue == rhs.hashValue
         }
         

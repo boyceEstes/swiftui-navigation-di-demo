@@ -19,22 +19,21 @@ struct ContentView: View {
     
     @StateObject var backpackRepository = BackpackRepository()
     
-    @StateObject var navigationFlow = NavigationFlow()
+    @StateObject var navigationFlow = HomeNavigationFlow()
     @StateObject var fishingNavigationFlow = FishingNavigationFlow()
     
     var body: some View {
-        HomeUIComposer.makeHomeView(goToRiver: goToRiver)
+        HomeView(goToRiver: goToRiver)
             .flowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
                 switch identifier {
                 case let .river(backpackRepository):
                     RiverView(
                         backpackRepository: backpackRepository,
                         goToBridge: goToBridge,
-                        goToFishing: goToFishingFromRiver
+                        goToFishing: goToFishing
                     )
                 case .bridge:
-
-                    BridgeView(goToFishing: goToFishingFromRiver)
+                    BridgeView(goToFishing: goToFishing)
                 }
             }
             .sheet(item: $navigationFlow.displayedSheet) { sheetyDestination in
@@ -57,7 +56,7 @@ struct ContentView: View {
     }
     
 
-    private func goToFishingFromRiver() {
+    private func goToFishing() {
         navigationFlow.displayedSheet = .fishing(backpackRepository)
     }
     
@@ -106,8 +105,6 @@ struct ContentView: View {
     private func goToNap() {
         fishingNavigationFlow.displayedSheet = .nap
     }
-    
-    
 }
 
 
