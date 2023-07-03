@@ -16,6 +16,17 @@ protocol StackNavigationFlow: ObservableObject {
     func push(_ viewIdentifier: Identifier)
 }
 
+
+extension StackNavigationFlow {
+    
+    
+    func push(_ viewIdentifier: Identifier) {
+
+        path.append(viewIdentifier)
+    }
+}
+
+
 class NavigationFlow: StackNavigationFlow {
     
     // MARK: Properties
@@ -44,20 +55,6 @@ class NavigationFlow: StackNavigationFlow {
                 hasher.combine("bridge")
             }
         }
-    }
-    
-    
-    func push(_ viewIdentifier: StackIdentifier) {
-
-        switch viewIdentifier {
-
-        case .river(let backpackRepository):
-            path.append(.river(backpackRepository))
-
-        case .bridge:
-            path.append(.bridge)
-        }
-        
     }
 }
 
