@@ -9,13 +9,13 @@ import SwiftUI
 
 struct BridgeView: View {
     
-    let goToFishing: () -> Void
+    let viewModel: BridgeViewModel
     
     var body: some View {
         VStack {
             Text("You step into the middle of a sturdy stone bridge over the streaming waters")
             Button("Cast a line") {
-                goToFishing()
+                viewModel.goToFishing()
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
         }
@@ -28,7 +28,7 @@ struct BridgeView: View {
 
 struct BridgeView_Previews: PreviewProvider {
     static var previews: some View {
-        BridgeView(goToFishing: { })
+        BridgeView(viewModel: BridgeViewModel(goToFishing: { }))
     }
 }
 

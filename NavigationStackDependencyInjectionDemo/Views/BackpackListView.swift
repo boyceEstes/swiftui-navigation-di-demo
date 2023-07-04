@@ -7,21 +7,34 @@
 
 import SwiftUI
 
+
+
 struct BackpackListView: View {
     
     let backpackRepository: BackpackRepository
     
     var body: some View {
         List {
-            ForEach(backpackRepository.getItems(), id: \.self) { item in
-                Text("\(item)")
+            Section {
+                ForEach(backpackRepository.getItems(), id: \.self) { item in
+                    Text("\(item)")
+                }
+            } header: {
+                Text("Backpack Contents")
+            } footer: {
+                if backpackRepository.getItems().isEmpty {
+                    Text("Nothin in the backpack")
+                }
             }
         }
+        .basicNavigationBar(title: "Backpack", navigationBarColor: .green)
     }
 }
 
 struct BackpackListView_Previews: PreviewProvider {
     static var previews: some View {
-        BackpackListView(backpackRepository: .preview)
+        NavigationStack {
+            BackpackListView(backpackRepository: .preview)
+        }
     }
 }

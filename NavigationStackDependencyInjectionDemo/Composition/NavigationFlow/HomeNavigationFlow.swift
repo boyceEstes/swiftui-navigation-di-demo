@@ -10,7 +10,7 @@ import Foundation
 
 // APP-SPECIFIC
 
-class HomeNavigationFlow: StackNavigationFlow {
+class HomeNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
     
     // MARK: Properties
     @Published var path = [StackIdentifier]()
@@ -31,8 +31,6 @@ class HomeNavigationFlow: StackNavigationFlow {
         
         func hash(into hasher: inout Hasher) {
             switch self {
-//            case .home:
-//                hasher.combine("home")
             case .river(let backpackRepository):
                 hasher.combine("river" + backpackRepository.id)
             case .bridge:
@@ -43,10 +41,10 @@ class HomeNavigationFlow: StackNavigationFlow {
     
     
     // MARK: Sheety Display
-    
+    // I made this Equatable to test `onChange` property
     typealias FinishFishing = ([String]) -> Void
     
-    enum SheetyIdentifier: Identifiable {
+    enum SheetyIdentifier: Identifiable, Equatable {
         case fishing(BackpackRepository, FinishFishing)
         
         var id: String {
@@ -54,6 +52,10 @@ class HomeNavigationFlow: StackNavigationFlow {
             case let .fishing(backpackRepository, _):
                 return "fishing-\(backpackRepository.id)"
             }
+        }
+        
+        static func == (lhs: HomeNavigationFlow.SheetyIdentifier, rhs: HomeNavigationFlow.SheetyIdentifier) -> Bool {
+            lhs.id == rhs.id
         }
     }
 }
@@ -75,7 +77,9 @@ class FishingNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
     }
     
     // MARK: Sheet Views
-    enum SheetyFishIdentifier: Identifiable {
+    // I made this Equatable to test `onChange` property
+    enum SheetyFishIdentifier: Identifiable, Equatable {
+        
         case nap
         
         var id: String {

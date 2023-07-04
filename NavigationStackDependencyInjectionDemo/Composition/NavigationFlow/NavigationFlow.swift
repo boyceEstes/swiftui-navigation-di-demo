@@ -34,3 +34,13 @@ protocol SheetyNavigationFlow: ObservableObject {
     
     var displayedSheet: SheetyIdentifier? { get set }
 }
+
+
+extension SheetyNavigationFlow {
+    
+    func dismiss() async {
+        DispatchQueue.main.async { [weak self] in
+            self?.displayedSheet = nil
+        }
+    }
+}

@@ -8,13 +8,22 @@
 import SwiftUI
 
 struct NapView: View {
+    
+    let dismissAllSheets: () -> Void
+    
     var body: some View {
-        Text("You close your eyes and drift off")
+        VStack {
+            Text("You close your eyes and drift off")
+            Button("It Was All A Dream") {
+                dismissAllSheets()
+            }
+            .buttonStyle(BigDealButtonStyle(backgroundColor: .purple))
+        }
     }
 }
 
 struct NapView_Previews: PreviewProvider {
     static var previews: some View {
-        NapView()
+        NapView(dismissAllSheets: { })
     }
 }

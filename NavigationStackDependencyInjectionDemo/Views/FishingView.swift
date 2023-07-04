@@ -17,7 +17,6 @@ struct FishingView: View {
     let goToBackpackItemDetail: (String) -> Void
     let goToFishDetail: (String) -> Void
     let goToNap: () -> Void
-    
     let finishFishing: ([String]) -> Void
     
     @State private var catches = [String]()
@@ -25,7 +24,7 @@ struct FishingView: View {
     var body: some View {
         VStack {
             Text("You watch your bobber float in the water and enjoy the warm sun on your skin")
-            
+
             HStack {
                 Button("Nap") {
                     goToNap()
