@@ -89,3 +89,15 @@ class FishingNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
         }
     }
 }
+
+
+class BackpackListNavigationFlow: StackNavigationFlow {
+    
+    // MARK: Properties
+    @Published var path = [StackIdentifier]()
+    
+    // MARK: Stack Destinations
+    enum StackIdentifier: Hashable {
+        case backpackItemDetail(String)
+    }
+}

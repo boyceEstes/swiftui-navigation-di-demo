@@ -76,13 +76,21 @@ class RiverUIComposer {
 
 struct ContentView: View {
     
-    @StateObject var backpackRepository = BackpackRepository()
+    @ObservedObject var backpackRepository: BackpackRepository
     
     @StateObject var navigationFlow = HomeNavigationFlow()
     @StateObject var fishingNavigationFlow = FishingNavigationFlow()
+    @StateObject var backpackNavigationFlow = BackpackListNavigationFlow()
+    
+    
+    init(backpackRepository: BackpackRepository) {
+        
+        self.backpackRepository = backpackRepository
+    }
+    
     
     var body: some View {
-//        TabView {
+        TabView {
             HomeView(goToRiver: goToRiver)
                 .flowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
                     switch identifier {
@@ -103,23 +111,31 @@ struct ContentView: View {
                         fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
                     }
                 }
+            // Use the onChange method for debugging correct state of navigation flows
                 .onChange(of: navigationFlow.displayedSheet) { newValue in
                     print("home flow: \(String(describing: newValue))")
                 }
                 .onChange(of: fishingNavigationFlow.displayedSheet) { newValue in
                     print("fishing flow: \(String(describing: newValue))")
                 }
-//                .tabItem {
-//                    Label("Explore", systemImage: "mountain.2")
-//                }
-//
-//            NavigationStack {
-//                BackpackListView(backpackRepository: backpackRepository)
-//            }
-//                .tabItem {
-//                    Label("Backpack", systemImage: "backpack")
-//                }
-//        }
+                .tabItem {
+                    Label("Explore", systemImage: "mountain.2")
+                }
+
+                BackpackListView(
+                    backpackRepository: backpackRepository,
+                    goToBackpackItemDetail: goToBackpackItemDetailFromBackpackList
+                )
+                .flowNavigationDestination(flowPath: $backpackNavigationFlow.path, flowDestination: { identifier in
+                    switch identifier {
+                    case let .backpackItemDetail(item):
+                        BackpackItemDetailView(item: item)
+                    }
+                })
+                .tabItem {
+                    Label("Backpack", systemImage: "backpack")
+                }
+        }
     }
     
     
@@ -194,11 +210,16 @@ struct ContentView: View {
             await navigationFlow.dismiss()
         }
     }
+    
+    
+    private func goToBackpackItemDetailFromBackpackList(item: String) {
+        backpackNavigationFlow.push(.backpackItemDetail(item))
+    }
 }
 
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(backpackRepository: BackpackRepository.preview)
     }
 }

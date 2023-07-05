@@ -19,9 +19,12 @@ import SwiftUI
 
 @main
 struct NavigationStackDependencyInjectionDemoApp: App {
+    
+    let backpackRepository = BackpackRepository()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(backpackRepository: backpackRepository)
         }
     }
 }

@@ -9,15 +9,39 @@ import SwiftUI
 
 
 
+
+
 struct BackpackListView: View {
     
     let backpackRepository: BackpackRepository
+    let goToBackpackItemDetail: (String) -> Void
+    
+    @State private var items: [String] {
+        didSet {
+            print("items was set from somewhere: \(items)")
+        }
+    }
+    
+    
+    init(
+        backpackRepository: BackpackRepository,
+        goToBackpackItemDetail: @escaping (String) -> Void
+    ) {
+        
+        self.backpackRepository = backpackRepository
+        self.goToBackpackItemDetail = goToBackpackItemDetail
+        
+        self.items = backpackRepository.getItems()
+    }
+    
     
     var body: some View {
         List {
             Section {
                 ForEach(backpackRepository.getItems(), id: \.self) { item in
-                    Text("\(item)")
+                    Button("\(item)") {
+                        goToBackpackItemDetail(item)
+                    }
                 }
             } header: {
                 Text("Backpack Contents")
@@ -28,13 +52,17 @@ struct BackpackListView: View {
             }
         }
         .basicNavigationBar(title: "Backpack", navigationBarColor: .green)
+        .refreshable {
+            items = backpackRepository.getItems()
+        }
     }
 }
+
 
 struct BackpackListView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            BackpackListView(backpackRepository: .preview)
+            BackpackListView(backpackRepository: .preview, goToBackpackItemDetail: { _ in })
         }
     }
 }
