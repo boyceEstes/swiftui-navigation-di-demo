@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 
 // APP-SPECIFIC
@@ -42,10 +43,10 @@ class HomeNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
     
     // MARK: Sheety Display
     // I made this Equatable to test `onChange` property
-    typealias FinishFishing = ([String]) -> Void
+//    typealias FinishFishing = ([String]) -> Void
     
     enum SheetyIdentifier: Identifiable, Equatable {
-        case fishing(BackpackRepository, FinishFishing)
+        case fishing(BackpackRepository, Binding<[String]>)
         
         var id: String {
             switch self {

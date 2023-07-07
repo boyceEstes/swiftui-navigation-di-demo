@@ -17,9 +17,10 @@ struct FishingView: View {
     let goToBackpackItemDetail: (String) -> Void
     let goToFishDetail: (String) -> Void
     let goToNap: () -> Void
-    let finishFishing: ([String]) -> Void
-    
-    @State private var catches = [String]()
+//    let finishFishing: ([String]) -> Void
+    @Binding var caughtFish: [String]
+//
+//    @State private var catches = [String]()
     
     var body: some View {
         VStack {
@@ -32,7 +33,7 @@ struct FishingView: View {
                 .buttonStyle(BigDealButtonStyle(backgroundColor: .pink))
                 
                 Button("Yank'a'Fish") {
-                    catches.append(potentialCatches.randomElement()!)
+                    caughtFish.append(potentialCatches.randomElement()!)
                 }
                 .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
             }
@@ -40,7 +41,7 @@ struct FishingView: View {
             
             List {
                 Section {
-                    ForEach(catches, id: \.self) { fish in
+                    ForEach(caughtFish, id: \.self) { fish in
                         Button("\(fish)") {
                             goToFishDetail(fish)
                         }
@@ -50,13 +51,13 @@ struct FishingView: View {
                         Text("Fish Caught")
                         Spacer()
                         Button("Pray for Fish") {
-                            catches.append(potentialCatches.randomElement()!)
+                            caughtFish.append(potentialCatches.randomElement()!)
                         }
                         .font(.caption)
                         .foregroundColor(.orange)
                     }
                 } footer: {
-                    if catches.isEmpty {
+                    if caughtFish.isEmpty {
                         Text("Playing the waiting game")
                     }
                 }
@@ -93,7 +94,7 @@ struct FishingView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Finish up") {
                     print("Tapped finsh button")
-                    finishFishing(catches)
+//                    finishFishing(catches)
                     dismiss()
                 }
             }
@@ -110,7 +111,8 @@ struct FishingView_Previews: PreviewProvider {
                 goToBackpackItemDetail: { _ in },
                 goToFishDetail: { _ in },
                 goToNap: { },
-                finishFishing: { _ in }
+                caughtFish: .constant(["Some fish"])
+//                finishFishing: { _ in }
             )
         }
     }

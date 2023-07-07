@@ -12,7 +12,9 @@ struct RiverView: View {
     
     let backpackRepository: BackpackRepository
     let goToBridge: () -> Void
-    let goToFishing: () -> Void
+    let goToFishing: (Binding<[String]>) -> Void
+    
+    @State private var fishCaught = [String]()
     
     var body: some View {
         VStack {
@@ -24,7 +26,7 @@ struct RiverView: View {
             
             Button("Cast a Line") {
                 print("Go to fishing")
-                goToFishing()
+                goToFishing($fishCaught)
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
         }
@@ -34,6 +36,7 @@ struct RiverView: View {
 
 struct RiverView_Previews: PreviewProvider {
     static var previews: some View {
-        RiverView(backpackRepository: BackpackRepository.preview, goToBridge: { }, goToFishing: { } )
+        
+        RiverView(backpackRepository: BackpackRepository.preview) {} goToFishing: { _ in }
     }
 }
