@@ -46,7 +46,7 @@ class HomeNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
 //    typealias FinishFishing = ([String]) -> Void
     
     enum SheetyIdentifier: Identifiable, Equatable {
-        case fishing(BackpackRepository, Binding<[String]>)
+        case fishing(BackpackRepository, ([String]) -> Void)
         
         var id: String {
             switch self {

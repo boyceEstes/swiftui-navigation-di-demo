@@ -17,7 +17,7 @@ struct BridgeView: View {
             
             Button("Cast a line") {
                 print("Go to fishing with view-model(\(viewModel.uuidString))")
-                viewModel.goToFishing($viewModel.bridgeCaughtFish)
+                viewModel.goToFishing(viewModel.displayFish)
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
             List {

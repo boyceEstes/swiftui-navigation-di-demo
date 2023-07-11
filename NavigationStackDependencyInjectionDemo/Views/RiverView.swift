@@ -12,7 +12,7 @@ struct RiverView: View {
     
     let backpackRepository: BackpackRepository
     let goToBridge: () -> Void
-    let goToFishing: (Binding<[String]>) -> Void
+    let goToFishing: (@escaping ([String]) -> Void) -> Void
     
     @State private var fishCaught = [String]()
     
@@ -26,7 +26,7 @@ struct RiverView: View {
             
             Button("Cast a Line") {
                 print("Go to fishing")
-                goToFishing($fishCaught)
+                goToFishing( { caughtFish in print("Hello world - from river view, retrieved: \(caughtFish)")})
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
         }
