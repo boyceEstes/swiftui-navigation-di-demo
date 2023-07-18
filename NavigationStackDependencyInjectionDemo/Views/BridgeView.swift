@@ -9,26 +9,36 @@ import SwiftUI
 
 struct BridgeView: View {
     
-    let viewModel: BridgeViewModel
+    @StateObject var viewModel: BridgeViewModel
+    
+    init(goToFishing: @escaping (@escaping ([String]) -> Void) -> Void) {
+        
+        self._viewModel = StateObject(wrappedValue: BridgeViewModel(goToFishing: goToFishing))
+    }
     
     var body: some View {
         VStack {
             Text("You step into the middle of a sturdy stone bridge over the streaming waters")
+            
             Button("Cast a line") {
-                viewModel.goToFishing()
+                print("Go to fishing with view-model(\(viewModel.uuidString))")
+                viewModel.goToFishing(viewModel.displayFish)
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
+            List {
+                ForEach(viewModel.bridgeCaughtFish, id: \.self) {
+                    Text("\($0)")
+                }
+            }
         }
-
-        
-            .basicNavigationBar(title: "Bridge")
+        .basicNavigationBar(title: "Bridge")
     }
 }
 
 
 struct BridgeView_Previews: PreviewProvider {
     static var previews: some View {
-        BridgeView(viewModel: BridgeViewModel(goToFishing: { }))
+        BridgeView(goToFishing: { _ in })
     }
 }
 

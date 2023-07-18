@@ -16,24 +16,28 @@ import SwiftUI
  */
 
 
-class BridgeViewModel {
+class BridgeViewModel: ObservableObject {
     
-    let goToFishing: () -> Void
-    var bridgeCaughtFish = [String]() {
-        didSet {
-            print("Look at the haul \(bridgeCaughtFish)")
-        }
+    let uuidString = UUID().uuidString
+    @Published var bridgeCaughtFish = ["testing", "testing2"]
+    
+    let goToFishing: (@escaping ([String]) -> Void) -> Void
+    
+    
+    init(goToFishing: @escaping (@escaping ([String]) -> Void) -> Void) {
+        
+        self.goToFishing = goToFishing
+        print("init bridgeViewModel(\(uuidString))")
     }
     
     
-    init(goToFishing: @escaping () -> Void) {
-        
-        self.goToFishing = goToFishing
+    deinit {
+        print("deinit bridgeViewModel(\(uuidString))")
     }
     
     
     func displayFish(caughtFish: [String]) {
-        print("All the fish caught on the bridge! \(caughtFish)")
+        print("All the fish caught on the bridge view-model(\(uuidString)! \(caughtFish)")
         bridgeCaughtFish = caughtFish
     }
 }
@@ -41,14 +45,9 @@ class BridgeViewModel {
 
 class BridgeUIComposer {
     
-    static func makeBridgeView(goToFishing: @escaping (@escaping HomeNavigationFlow.FinishFishing) -> Void) -> BridgeView {
+    static func makeBridgeView(goToFishing: @escaping (@escaping ([String]) -> Void) -> Void) -> BridgeView {
         
-        let bridgeViewModel = BridgeViewModel(goToFishing: {
-            let bridgeViewModel = BridgeViewModel(goToFishing: {})
-            goToFishing(bridgeViewModel.displayFish)
-        })
-        
-        return BridgeView(viewModel: bridgeViewModel)
+        return BridgeView(goToFishing: goToFishing)
     }
 }
 
@@ -58,17 +57,13 @@ class RiverUIComposer {
     static func makeRiverView(
         backpackRepository: BackpackRepository,
         goToBridge: @escaping () -> Void,
-        goToFishing: @escaping (@escaping HomeNavigationFlow.FinishFishing) -> Void
+        goToFishing: @escaping (@escaping ([String]) -> Void) -> Void
     ) -> RiverView {
         
         RiverView(
             backpackRepository: backpackRepository,
             goToBridge: goToBridge,
-            goToFishing: {
-                goToFishing { caughtFish in
-                    print("Finished fishing at the river, caught \(caughtFish)")
-                }
-            }
+            goToFishing: goToFishing
         )
     }
 }
@@ -78,7 +73,10 @@ struct ContentView: View {
     
     @ObservedObject var backpackRepository: BackpackRepository
     
-    @StateObject var navigationFlow = HomeNavigationFlow()
+//    @State private var navigationFlow = HomeNavigationFlow()
+    @State private var homeNavigationFlowPath = [HomeNavigationFlow.StackIdentifier]()
+    @State private var homeNavigationFlowDisplayedSheet: HomeNavigationFlow.SheetyIdentifier?
+    
     @StateObject var fishingNavigationFlow = FishingNavigationFlow()
     @StateObject var backpackNavigationFlow = BackpackListNavigationFlow()
     
@@ -90,9 +88,11 @@ struct ContentView: View {
     
     
     var body: some View {
-        TabView {
+//        TabView {
+            
+        NavigationStack(path: $homeNavigationFlowPath) {
             HomeView(goToRiver: goToRiver)
-                .flowNavigationDestination(flowPath: $navigationFlow.path) { identifier in
+                .navigationDestination(for: HomeNavigationFlow.StackIdentifier.self) { identifier in
                     switch identifier {
                     case let .river(backpackRepository):
                         RiverUIComposer.makeRiverView(
@@ -100,57 +100,94 @@ struct ContentView: View {
                             goToBridge: goToBridge,
                             goToFishing: goToFishing
                         )
+//                        .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+//                            switch sheetyDestination {
+//
+//                            case let .fishing(backpackRepository, finishFishing):
+//                                fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+//                            }
+//                        }
                     case .bridge:
                         BridgeUIComposer.makeBridgeView(goToFishing: goToFishing)
+//                            .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+//                                switch sheetyDestination {
+//
+//                                case let .fishing(backpackRepository, finishFishing):
+//                                    fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+//                                }
+//                            }
                     }
                 }
-                .sheet(item: $navigationFlow.displayedSheet) { sheetyDestination in
-                    switch sheetyDestination {
-                        
-                    case let .fishing(backpackRepository, finishFishing):
-                        fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
-                    }
-                }
+        }
+        .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+            switch sheetyDestination {
+
+            case let .fishing(backpackRepository, finishFishing):
+                fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+            }
+        }
+//            HomeView(goToRiver: goToRiver)
+//                .flowNavigationDestination(flowPath: $homeNavigationFlowPath) { identifier in
+//                    switch identifier {
+//                    case let .river(backpackRepository):
+//                        RiverUIComposer.makeRiverView(
+//                            backpackRepository: backpackRepository,
+//                            goToBridge: goToBridge,
+//                            goToFishing: goToFishing
+//                        )
+//                    case .bridge:
+//                        BridgeUIComposer.makeBridgeView(goToFishing: goToFishing)
+//                    }
+//                }
+//                .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+//                    switch sheetyDestination {
+//
+//                    case let .fishing(backpackRepository, finishFishing):
+//                        fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+//                    }
+//                }
             // Use the onChange method for debugging correct state of navigation flows
-                .onChange(of: navigationFlow.displayedSheet) { newValue in
+                .onChange(of: homeNavigationFlowDisplayedSheet) { newValue in
                     print("home flow: \(String(describing: newValue))")
                 }
                 .onChange(of: fishingNavigationFlow.displayedSheet) { newValue in
                     print("fishing flow: \(String(describing: newValue))")
                 }
-                .tabItem {
-                    Label("Explore", systemImage: "mountain.2")
-                }
+//                .tabItem {
+//                    Label("Explore", systemImage: "mountain.2")
+//                }
 
-                BackpackListView(
-                    backpackRepository: backpackRepository,
-                    goToBackpackItemDetail: goToBackpackItemDetailFromBackpackList
-                )
-                .flowNavigationDestination(flowPath: $backpackNavigationFlow.path, flowDestination: { identifier in
-                    switch identifier {
-                    case let .backpackItemDetail(item):
-                        BackpackItemDetailView(item: item)
-                    }
-                })
-                .tabItem {
-                    Label("Backpack", systemImage: "backpack")
-                }
-        }
+//                BackpackListView(
+//                    backpackRepository: backpackRepository,
+//                    goToBackpackItemDetail: goToBackpackItemDetailFromBackpackList
+//                )
+//                .flowNavigationDestination(flowPath: $backpackNavigationFlow.path, flowDestination: { identifier in
+//                    switch identifier {
+//                    case let .backpackItemDetail(item):
+//                        BackpackItemDetailView(item: item)
+//                    }
+//                })
+//                .tabItem {
+//                    Label("Backpack", systemImage: "backpack")
+//                }
+//        }
     }
     
     
     private func goToRiver() {
-        navigationFlow.push(.river(backpackRepository))
+//        navigationFlow.push(.river(backpackRepository))
+        homeNavigationFlowPath.append(.river(backpackRepository))
     }
     
     
     private func goToBridge() {
-        navigationFlow.push(.bridge)
+//        navigationFlow.push(.bridge)
+        homeNavigationFlowPath.append(.bridge)
     }
     
     
-    private func goToFishing(finishFishing: @escaping HomeNavigationFlow.FinishFishing) {
-        navigationFlow.displayedSheet = .fishing(backpackRepository, finishFishing)
+    private func goToFishing(fishingCompletion: @escaping ([String]) -> Void) {
+        homeNavigationFlowDisplayedSheet = .fishing(backpackRepository, fishingCompletion)
     }
     
     
@@ -165,6 +202,7 @@ struct ContentView: View {
             goToBackpackItemDetail: goToBackpackItemDetail,
             goToFishDetail: goToFishDetail,
             goToNap: goToNap,
+//            caughtFish: caughtFish
             finishFishing: finishFishing
         )
         .flowNavigationDestination(
@@ -173,7 +211,7 @@ struct ContentView: View {
                 switch identifier {
                 case .fishDetail(let fish):
                     FishDetailView(fish: fish)
-                    
+
                 case .backpackItemDetail(let item):
                     BackpackItemDetailView(item: item)
                 }
@@ -207,7 +245,7 @@ struct ContentView: View {
     func dismissFishingAndHomeSheets() {
         Task {
             await fishingNavigationFlow.dismiss()
-            await navigationFlow.dismiss()
+            homeNavigationFlowDisplayedSheet = nil
         }
     }
     
