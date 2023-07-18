@@ -17,6 +17,7 @@ struct RiverView: View {
     @State private var fishCaught = [String]()
     
     var body: some View {
+        
         VStack {
             Text("You see gently rolling waters sparkling under the sun")
             Button("Walk to Bridge") {
@@ -26,9 +27,15 @@ struct RiverView: View {
             
             Button("Cast a Line") {
                 print("Go to fishing")
-                goToFishing( { caughtFish in print("Hello world - from river view, retrieved: \(caughtFish)")})
+                goToFishing( { caughtFish in print("Hello world - from river view, retrieved: \(caughtFish)")
+                    fishCaught = caughtFish
+                })
             }
             .buttonStyle(BigDealButtonStyle(backgroundColor: .orange))
+            
+            List(fishCaught, id: \.self) { fish in
+                Text("\(fish)")
+            }
         }
         .basicNavigationBar(title: "River")
     }

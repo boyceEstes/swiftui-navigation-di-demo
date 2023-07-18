@@ -9,7 +9,12 @@ import SwiftUI
 
 struct BridgeView: View {
     
-    @ObservedObject var viewModel: BridgeViewModel
+    @StateObject var viewModel: BridgeViewModel
+    
+    init(goToFishing: @escaping (@escaping ([String]) -> Void) -> Void) {
+        
+        self._viewModel = StateObject(wrappedValue: BridgeViewModel(goToFishing: goToFishing))
+    }
     
     var body: some View {
         VStack {
@@ -33,7 +38,7 @@ struct BridgeView: View {
 
 struct BridgeView_Previews: PreviewProvider {
     static var previews: some View {
-        BridgeView(viewModel: BridgeViewModel(goToFishing: { _ in }))
+        BridgeView(goToFishing: { _ in })
     }
 }
 

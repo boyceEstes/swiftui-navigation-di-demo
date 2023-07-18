@@ -25,6 +25,11 @@ struct FishingView: View {
         VStack {
             Text("You watch your bobber float in the water and enjoy the warm sun on your skin")
 
+            Button("Finish Up") {
+                finishAndDismissFishing()
+            }
+            .buttonStyle(BigDealButtonStyle())
+            
             HStack {
                 Button("Nap") {
                     goToNap()
@@ -92,12 +97,17 @@ struct FishingView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Finish up") {
-                    print("Tapped finsh button")
-//                    finishFishing(catches)
-                    dismiss()
+                    finishAndDismissFishing()
                 }
             }
         }
+    }
+    
+    
+    func finishAndDismissFishing() {
+        print("Tapped finsh button")
+        finishFishing(catches)
+        dismiss()
     }
 }
 

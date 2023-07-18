@@ -47,8 +47,7 @@ class BridgeUIComposer {
     
     static func makeBridgeView(goToFishing: @escaping (@escaping ([String]) -> Void) -> Void) -> BridgeView {
         
-        let bridgeViewModel = BridgeViewModel(goToFishing: goToFishing)
-        return BridgeView(viewModel: bridgeViewModel)
+        return BridgeView(goToFishing: goToFishing)
     }
 }
 
@@ -89,10 +88,11 @@ struct ContentView: View {
     
     
     var body: some View {
-        TabView {
+//        TabView {
             
+        NavigationStack(path: $homeNavigationFlowPath) {
             HomeView(goToRiver: goToRiver)
-                .flowNavigationDestination(flowPath: $homeNavigationFlowPath) { identifier in
+                .navigationDestination(for: HomeNavigationFlow.StackIdentifier.self) { identifier in
                     switch identifier {
                     case let .river(backpackRepository):
                         RiverUIComposer.makeRiverView(
@@ -100,17 +100,52 @@ struct ContentView: View {
                             goToBridge: goToBridge,
                             goToFishing: goToFishing
                         )
+//                        .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+//                            switch sheetyDestination {
+//
+//                            case let .fishing(backpackRepository, finishFishing):
+//                                fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+//                            }
+//                        }
                     case .bridge:
                         BridgeUIComposer.makeBridgeView(goToFishing: goToFishing)
+//                            .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+//                                switch sheetyDestination {
+//
+//                                case let .fishing(backpackRepository, finishFishing):
+//                                    fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+//                                }
+//                            }
                     }
                 }
-                .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
-                    switch sheetyDestination {
+        }
+        .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+            switch sheetyDestination {
 
-                    case let .fishing(backpackRepository, finishFishing):
-                        fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
-                    }
-                }
+            case let .fishing(backpackRepository, finishFishing):
+                fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+            }
+        }
+//            HomeView(goToRiver: goToRiver)
+//                .flowNavigationDestination(flowPath: $homeNavigationFlowPath) { identifier in
+//                    switch identifier {
+//                    case let .river(backpackRepository):
+//                        RiverUIComposer.makeRiverView(
+//                            backpackRepository: backpackRepository,
+//                            goToBridge: goToBridge,
+//                            goToFishing: goToFishing
+//                        )
+//                    case .bridge:
+//                        BridgeUIComposer.makeBridgeView(goToFishing: goToFishing)
+//                    }
+//                }
+//                .sheet(item: $homeNavigationFlowDisplayedSheet) { sheetyDestination in
+//                    switch sheetyDestination {
+//
+//                    case let .fishing(backpackRepository, finishFishing):
+//                        fishingView2(backpackRepository: backpackRepository, finishFishing: finishFishing)
+//                    }
+//                }
             // Use the onChange method for debugging correct state of navigation flows
                 .onChange(of: homeNavigationFlowDisplayedSheet) { newValue in
                     print("home flow: \(String(describing: newValue))")
@@ -118,24 +153,24 @@ struct ContentView: View {
                 .onChange(of: fishingNavigationFlow.displayedSheet) { newValue in
                     print("fishing flow: \(String(describing: newValue))")
                 }
-                .tabItem {
-                    Label("Explore", systemImage: "mountain.2")
-                }
+//                .tabItem {
+//                    Label("Explore", systemImage: "mountain.2")
+//                }
 
-                BackpackListView(
-                    backpackRepository: backpackRepository,
-                    goToBackpackItemDetail: goToBackpackItemDetailFromBackpackList
-                )
-                .flowNavigationDestination(flowPath: $backpackNavigationFlow.path, flowDestination: { identifier in
-                    switch identifier {
-                    case let .backpackItemDetail(item):
-                        BackpackItemDetailView(item: item)
-                    }
-                })
-                .tabItem {
-                    Label("Backpack", systemImage: "backpack")
-                }
-        }
+//                BackpackListView(
+//                    backpackRepository: backpackRepository,
+//                    goToBackpackItemDetail: goToBackpackItemDetailFromBackpackList
+//                )
+//                .flowNavigationDestination(flowPath: $backpackNavigationFlow.path, flowDestination: { identifier in
+//                    switch identifier {
+//                    case let .backpackItemDetail(item):
+//                        BackpackItemDetailView(item: item)
+//                    }
+//                })
+//                .tabItem {
+//                    Label("Backpack", systemImage: "backpack")
+//                }
+//        }
     }
     
     
@@ -176,7 +211,7 @@ struct ContentView: View {
                 switch identifier {
                 case .fishDetail(let fish):
                     FishDetailView(fish: fish)
-                    
+
                 case .backpackItemDetail(let item):
                     BackpackItemDetailView(item: item)
                 }
