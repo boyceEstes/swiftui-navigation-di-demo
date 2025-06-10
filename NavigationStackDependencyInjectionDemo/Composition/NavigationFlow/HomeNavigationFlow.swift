@@ -43,8 +43,6 @@ class HomeNavigationFlow: StackNavigationFlow, SheetyNavigationFlow {
     
     // MARK: Sheety Display
     // I made this Equatable to test `onChange` property
-//    typealias FinishFishing = ([String]) -> Void
-    
     enum SheetyIdentifier: Identifiable, Equatable {
         case fishing(BackpackRepository, ([String]) -> Void)
         

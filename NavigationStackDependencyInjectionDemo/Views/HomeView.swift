@@ -16,6 +16,8 @@ struct HomeView: View {
         VStack {
             Text("You see a cozy home nestled in a clearing of trees")
             
+            Text("There is a river nearby")
+            
             Button {
                 goToRiver()
             } label: {

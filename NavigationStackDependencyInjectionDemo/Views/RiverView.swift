@@ -20,6 +20,7 @@ struct RiverView: View {
         
         VStack {
             Text("You see gently rolling waters sparkling under the sun")
+            Text("There is a stone walkway passing over the river")
             Button("Walk to Bridge") {
                 goToBridge()
             }

@@ -14,7 +14,6 @@ import SwiftUI
  * Composition AND navigation should happen in this tab. We want the views to be as dumb as possible
  *
  * We can do this using composers with static functions to make the view.
- *
  */
 
 @main
